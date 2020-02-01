@@ -31,11 +31,11 @@ class Debt extends Model
 
     public function setDatePaymentAttribute($value)
     {
-        $this->attributes['datePayment'] = new DateTime($value);
+        $this->attributes['datePayment'] = is_string($value) ? new DateTime($value) : $value; 
     }
 
     public function setStartDateAttribute($value)
     {
-        $this->attributes['startDate'] = new DateTime($value);
+        $this->attributes['startDate'] = is_string($value) ? new DateTime($value) : $value; 
     }
 }
