@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Address;
+use App\Utils\Controllers\ControllerModel;
 
 /**
  * Criei a class ControllerModel que contem algumas functions basica para REST API

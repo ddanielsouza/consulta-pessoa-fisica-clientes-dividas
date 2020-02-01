@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
-
+use App\Utils\Controllers\ControllerModel;
 class ClientController extends ControllerModel
 {
     protected $modelName = Client::class;

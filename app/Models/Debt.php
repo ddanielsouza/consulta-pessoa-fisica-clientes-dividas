@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class Debt extends Model
 {
-    use \App\Helpers\ISOSerialization;
+    use \App\Utils\Helpers\ISOSerialization;
 
     protected $table = "debts";
 

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class Address extends Model
 {
-    use \App\Helpers\ISOSerialization;
+    use \App\Utils\Helpers\ISOSerialization;
 
     protected $table = "address";
 
