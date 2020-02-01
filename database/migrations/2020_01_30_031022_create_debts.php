@@ -17,11 +17,11 @@ class CreateDebts extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('client_id');
             $table->string('description', 200);
-            $table->timestamp('startDate');
-            $table->timestamp('datePayment');
+            $table->datetime('startDate');
+            $table->datetime('datePayment')->nullable(true);
             $table->double('initialAmount');
-            $table->double('paymentAmount');
-            $table->boolean('isActive');
+            $table->double('paymentAmount')->nullable(true);
+            $table->boolean('isActive')->default(true);
             $table->timestamps();
             $table->foreign('client_id')->references('id')->on('clients');
         });

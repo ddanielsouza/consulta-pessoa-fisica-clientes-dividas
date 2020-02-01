@@ -19,9 +19,10 @@ class Address extends Model
         'complement',
         'neighborhood',
         'cod_ibge',
+        'hash_zip_code'
     ];
 
-    protected $hidden = ['zipCode', 'streetAddress', 'complement', 'neighborhood'];
+    protected $hidden = ['zipCode', 'streetAddress', 'complement', 'neighborhood', 'hash_zip_code'];
     protected $appends = ['dctZipCode', 'dctStreetAddress', 'dctComplement', 'dctNeighborhood'];
 
     public function getDctZipCodeAttribute()
@@ -46,6 +47,8 @@ class Address extends Model
 
     public function setDctZipCodeAttribute($value)
     {
+        //HASH PARA USAR PARA CONSULTA
+        $this->hash_zip_code = hash('md5', $value);
         $this->zipCode = encrypt($value);
     }
     

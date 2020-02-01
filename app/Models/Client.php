@@ -32,4 +32,8 @@ class Client extends Model
         //HASH UNICA PARA EVITAR DUPLICAR DADOS
         $this->hash_registry = hash('md5', $value);
     }
+
+    public function address(){
+        return $this->hasMany('App\Models\Address', 'id', 'client_id');
+    }
 }

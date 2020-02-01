@@ -18,6 +18,7 @@ class CreateAddress extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('client_id');
             $table->string('zipCode', 250);
+            $table->string('hash_zip_code', 100);
             $table->string('streetAddress', 400);
             $table->string('complement', 400);
             $table->string('neighborhood', 400);

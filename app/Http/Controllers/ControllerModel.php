@@ -4,17 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Exception;
-
+use App\MFacades\ModelHelper;
 abstract class ControllerModel  extends Controller
 {
     protected $modelName;
     protected $basicValidate = [];
     protected $columnsEncrypted = [];
 
-    public function getById($id)
+    public function getById(Request $request, $id)
     {
         try {
-            $result = $this->modelName::find($id);
+            $model = $this->modelName::where('id', $id);
+            $relations = json_decode($request->input('relations'));
+            if(json_last_error() == JSON_ERROR_NONE && is_array($relations)){
+                $model->with($relations);
+            }
+
+            $columnsSelect = json_decode($request->input('columnsSelect'));
+            if(json_last_error() == JSON_ERROR_NONE && is_array($columnsSelect)){
+                $model->select($columnsSelect);
+            }
+
+            $result = $model->first();
             return response()->json(['success' => true, 'data' => $result], 201);
         } catch (Exception $e) {
             return response()->json([
@@ -79,7 +90,7 @@ abstract class ControllerModel  extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error interno!',
-                'error' => [$e->getMessage()]
+                'error' => [$e->getMessage(), $e->getFile(), $e->getLine()]
             ], 500);
         }
     }
@@ -125,42 +136,37 @@ abstract class ControllerModel  extends Controller
         try{
             $model = $this->modelName::whereNotNull('id');
 
+            $relationships = json_decode($request->input('relationships'));
+            if(json_last_error() == JSON_ERROR_NONE && is_array($relationships)){
+                $model->with($relationships);
+            }
+
             $columnsSelect = json_decode($request->input('columnsSelect'));
             if(json_last_error() == JSON_ERROR_NONE && is_array($columnsSelect)){
                 $model->select($columnsSelect);
             }
 
-            foreach($request->all() as $key => $value){
-                if(in_array($key, array_keys($this->columnsEncrypted))){
-
-                    $columnName = $this->columnsEncrypted[$key];
-                    $model->where($columnName, hash('md5', $value));
-
-                }else if(in_array($key, array_keys($this->getRules()))){
-
-                    if(is_array($value) && count($value) === 2){
-                        $model->whereBetween($key, $value);
-                    }
-                    else{
-                        $param = json_decode($value);
-                        if(json_last_error() == JSON_ERROR_NONE && is_object($param)){
-                            $filterColumns = is_array($param) ? $param : [$param];
-
-                            foreach($filterColumns as $filterColumn){
-                                $value = $filterColumn->value;
-                                $operator = empty($filterColumn->operator)  ? '=' : $filterColumn->operator;
-
-                                $model->where($key, $operator, $value);
-                            }
-                        }
-                        else{
-                            $model->where($key, $value);
-                        }
-                    }
-                }
-            }
+            $model = ModelHelper::filterAllColumns($model, $request->all(), $this->getRules(), $this->columnsEncrypted);
 
             return response()->json(['success' => true, 'data' => $model->get()], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error interno!',
+                'error' => [$e->getMessage()]
+            ], 500);
+        }
+    }
+
+    public function delete($id){
+        try{
+            $model = $this->modelName::find($id);
+
+            if(!empty($model)){
+                $model->delete();
+            }else{
+                return response()->json(['success' => false, 'message' => 'registro não encontrado'], 404);
+            }
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
