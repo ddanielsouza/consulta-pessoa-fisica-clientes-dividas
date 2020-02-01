@@ -146,6 +146,15 @@ abstract class ControllerModel  extends Controller
                 $model->select($columnsSelect);
             }
 
+            $paginate = json_decode($request->input('paginate'));
+            if(json_last_error() == JSON_ERROR_NONE && is_object($paginate)){
+                $limit = !empty($paginate->limit) ? $paginate->limit : 100;
+                $offset = !empty($paginate->offset) ? $paginate->offset : 0;
+
+                $model->limit($limit);
+                $model->offset($offset);
+            }
+
             $model = ModelHelper::filterAllColumns($model, $request->all(), $this->getRules(), $this->columnsEncrypted);
 
             return response()->json(['success' => true, 'data' => $model->get()], 200);
