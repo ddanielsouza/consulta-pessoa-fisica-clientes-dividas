@@ -26,7 +26,7 @@ class Payloads extends Migration
 
             $client = new Client();
             $client->name = "$name $sobrenome";
-            $client->dctRegistry = substr($i. rand(0, 10000000). "0000000000000", 0, 11);
+            $client->dctRegistry = sprintf('%011d', $i);
 
             $client->save();
 
