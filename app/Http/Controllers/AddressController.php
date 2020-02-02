@@ -5,9 +5,6 @@ use Illuminate\Http\Request;
 use App\Models\Address;
 use App\Utils\Controllers\ControllerModel;
 
-/**
- * Criei a class ControllerModel que contem algumas functions basica para REST API
- */
 class AddressController extends ControllerModel
 {
     protected $modelName = Address::class;

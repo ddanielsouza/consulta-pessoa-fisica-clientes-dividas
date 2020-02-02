@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Debt;
 use App\Utils\Controllers\ControllerModel;
-/**
- * Criei a class ControllerModel que contem algumas functions basica para REST API
- */
+
 class DebtController extends ControllerModel
 {
     protected $modelName = Debt::class;
