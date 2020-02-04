@@ -13,4 +13,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && chmod -R 775 /app/storage
 
 RUN a2enmod rewrite
+
+CMD php artisan migrate && apache2-foreground
 EXPOSE 80
